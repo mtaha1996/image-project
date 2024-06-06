@@ -1,15 +1,9 @@
 # image_provider
 
-Local setup:
+## setup
 
-1- python3 -m venv venv
+1- Create a copy of all ```*.env.sample``` files with the name ```*.env```
 
-2- create superuser
+2- type ```Make start``` in shell
 
-
-
-Run the project:
-
-
-
-1- make start
+"Everythin is now up and running"
