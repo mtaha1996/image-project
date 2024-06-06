@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/image-downloader/image_harvester/config"
+	"github.com/mtaha1996/image-project/image_harvester/config"
 )
 
 type SearchResult struct {

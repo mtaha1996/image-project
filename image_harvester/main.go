@@ -8,10 +8,10 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/image-downloader/image_harvester/config"
-	"github.com/image-downloader/image_harvester/downloader"
-	"github.com/image-downloader/image_harvester/fetcher"
-	"github.com/image-downloader/image_harvester/storage"
+	"github.com/mtaha1996/image-project/image_harvester/config"
+	"github.com/mtaha1996/image-project/image_harvester/downloader"
+	"github.com/mtaha1996/image-project/image_harvester/fetcher"
+	"github.com/mtaha1996/image-project/image_harvester/storage"
 )
 
 func main() {

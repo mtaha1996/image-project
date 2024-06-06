@@ -22,8 +22,6 @@ services:
       context: .
       dockerfile: ./image_provider/docker/web/Dockerfile
     command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    # volumes:
-    #   - web_data:/code
     ports:
       - "8000:8000"
     depends_on:
@@ -59,6 +57,28 @@ services:
       - db
       - web
 
+  image-harvester:
+    build:
+      context: .
+      dockerfile: ./image_harvester/Dockerfile
+    container_name: go_image_harvester
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - SEARCH_ENGINE_ID=${SEARCH_ENGINE_ID}
+      - BASE_URL=${BASE_URL}
+      - IMAGE_POSTGRES_DB=${IMAGE_POSTGRES_DB}
+      - IMAGE_POSTGRES_USER=${IMAGE_POSTGRES_USER}
+      - IMAGE_POSTGRES_PASSWORD=${IMAGE_POSTGRES_PASSWORD}
+      - IMAGE_POSTGRES_HOST=${IMAGE_POSTGRES_HOST}
+      - IMAGE_POSTGRES_PORT=${IMAGE_POSTGRES_PORT}
+    env_file:
+      - ./image_harvester/docker/.env
+    depends_on:
+      - image-db
+    volumes:
+      - image_harvester_data:/app
+
 volumes:
   postgres_data:
   image_postgres_data:
+  image_harvester_data:

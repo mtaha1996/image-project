@@ -1,6 +1,6 @@
-module github.com/image-downloader/image_harvester
+module github.com/mtaha1996/image-project/image_harvester
 
-go 1.22.2
+go 1.23
 
 require (
 	github.com/google/uuid v1.6.0

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/image-downloader/image_harvester/config"
 	_ "github.com/lib/pq"
+	"github.com/mtaha1996/image-project/image_harvester/config"
 )
 
 func ConnectDB(cfg config.Config) (*sql.DB, error) {
