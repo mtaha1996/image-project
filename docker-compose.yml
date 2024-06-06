@@ -15,12 +15,12 @@ services:
       restart_policy:
         condition: on-failure
     env_file:
-      - ./image_downloader/docker/db/.env
+      - ./image_provider/docker/db/.env
 
   web:
     build:
       context: .
-      dockerfile: ./image_downloader/docker/web/Dockerfile
+      dockerfile: ./image_provider/docker/web/Dockerfile
     command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     # volumes:
     #   - web_data:/code
@@ -29,7 +29,7 @@ services:
     depends_on:
       - db
     environment:
-      DJANGO_SETTINGS_MODULE: image_downloader.settings
+      DJANGO_SETTINGS_MODULE: image_provider.settings
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -38,7 +38,7 @@ services:
       restart_policy:
         condition: on-failure
     env_file:
-      - ./image_downloader/docker/web/.env
+      - ./image_provider/docker/web/.env
 
 volumes:
   postgres_data:

@@ -9,10 +9,10 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /code
 
 # Install dependencies
-COPY ./image_downloader/requirements.txt /code/
+COPY ./image_provider/requirements.txt /code/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project
-COPY ./image_downloader /code/
+COPY ./image_provider /code/
 
 CMD ["python", "manage.py runserver 0.0.0.0:8000"]
