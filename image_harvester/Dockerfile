@@ -1,5 +1,5 @@
 # Use the official Golang image as the base image
-FROM golang:1.20-alpine
+FROM golang:1.22
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
@@ -21,4 +21,4 @@ RUN go build -o main .
 EXPOSE 8080
 
 # Command to run the executable
-CMD ["./main"]
+CMD ["./main", "cute kittens", "2", "128"]

@@ -16,6 +16,8 @@ services:
         condition: on-failure
     env_file:
       - ./image_provider/docker/db/.env
+    networks:
+      - app-network
 
   web:
     build:
@@ -37,6 +39,8 @@ services:
         condition: on-failure
     env_file:
       - ./image_provider/docker/web/.env
+    networks:
+      - app-network
 
   image-db:
     image: postgres
@@ -56,6 +60,8 @@ services:
     depends_on:
       - db
       - web
+    networks:
+      - app-network
 
   image-harvester:
     build:
@@ -75,10 +81,18 @@ services:
       - ./image_harvester/docker/.env
     depends_on:
       - image-db
+      - web
+      - db
     volumes:
       - image_harvester_data:/app
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
   image_postgres_data:
   image_harvester_data:
+
+networks:
+  app-network:
+    driver: bridge
