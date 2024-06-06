@@ -11,8 +11,11 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strconv"
 	"sync"
+
+	"github.com/google/uuid"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -93,9 +96,28 @@ func downloadAndResizeImage(url string, size uint) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func saveImageToDB(db *sql.DB, query string, imageData []byte) error {
-	_, err := db.Exec("INSERT INTO images(query, image_data) VALUES($1, $2)", query, imageData)
+func saveImageToDB(db *sql.DB, filename, query string, imageData []byte) error {
+	_, err := db.Exec("INSERT INTO images(file_name, query, image_data) VALUES($1, $2, $3)", filename, query, imageData)
 	return err
+}
+
+func saveImageToFile(filename, directory string, imageData []byte) error {
+	// Create the directory if it doesn't exist
+	err := os.MkdirAll(directory, os.ModePerm)
+	if err != nil {
+		fmt.Errorf("failed to create directory: %v", err)
+	}
+
+	// Construct the full path for the file
+	filePath := filepath.Join(directory, filename)
+
+	// Write the image data to the file
+	err = os.WriteFile(filePath, imageData, 0644)
+	if err != nil {
+		fmt.Errorf("failed to save image to file: %v", err)
+	}
+
+	return nil
 }
 
 func checkAndCreateTable(db *sql.DB) error {
@@ -103,6 +125,7 @@ func checkAndCreateTable(db *sql.DB) error {
 	CREATE TABLE IF NOT EXISTS images (
 		id SERIAL PRIMARY KEY,
 		query TEXT,
+		file_name TEXT,
 		image_data BYTEA
 	)`
 	_, err := db.Exec(createTableQuery)
@@ -172,10 +195,24 @@ func main() {
 				log.Printf("Failed to download and resize image: %v", err)
 				return
 			}
-			err = saveImageToDB(db, query, imageData)
+
+			// Generate a random file name
+			filename := uuid.New().String() + ".jpg"
+
+			err = saveImageToDB(db, filename, query, imageData)
 			if err != nil {
 				log.Printf("Failed to save image to database: %v", err)
 			}
+
+			// Save image to directory with a random file name
+			directory := "./downloaded_images"
+			err = saveImageToFile(filename, directory, imageData)
+			if err != nil {
+				log.Printf("Failed to save image to directory: %v", err)
+			} else {
+				log.Printf("Image successfully saved to directory with filename: %s", filename)
+			}
+
 		}(url)
 	}
 	wg.Wait()
