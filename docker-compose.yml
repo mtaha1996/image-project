@@ -40,5 +40,25 @@ services:
     env_file:
       - ./image_provider/docker/web/.env
 
+  image-db:
+    image: postgres
+    volumes:
+      - image_postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${IMAGE_POSTGRES_DB}
+      POSTGRES_USER: ${IMAGE_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${IMAGE_POSTGRES_PASSWORD}
+    ports:
+      - "15432:5432"
+    deploy:
+      restart_policy:
+        condition: on-failure
+    env_file:
+      - ./image_harvester/.env
+    depends_on:
+      - db
+      - web
+
 volumes:
   postgres_data:
+  image_postgres_data:

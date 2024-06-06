@@ -140,3 +140,8 @@ GitHub.sublime-settings
 app/*.xlsx
 app/*.csv
 app/*.xls
+
+
+*/vendor/*
+
+.vscode
